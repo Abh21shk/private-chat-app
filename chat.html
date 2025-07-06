@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Chat Room</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="chat-page">
+  <div class="chat-container">
+    <header>
+      <div class="profile">
+        <img id="user-pic" alt="Profile" />
+        <h2 id="user-name"></h2>
+      </div>
+      <button id="logout-btn">Logout</button>
+    </header>
+
+    <div class="search-users">
+      <input type="text" id="search-input" placeholder="Search user..." />
+      <ul id="user-list"></ul>
+    </div>
+
+    <div class="chat-window">
+      <div class="chat-header" id="chat-header"></div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type a message..." />
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>
