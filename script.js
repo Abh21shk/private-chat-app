@@ -8,7 +8,6 @@ const sendBtn = document.getElementById("send-btn");
 const chatMessages = document.getElementById("chat-messages");
 const clearBtn = document.getElementById("clear-btn");
 const activeStatus = document.getElementById("active-status");
-const imageInput = document.getElementById("image-input");
 
 let username = "";
 
@@ -21,10 +20,7 @@ loginBtn.addEventListener("click", () => {
   }
 });
 
-sendBtn.addEventListener("click", () => {
-  sendMessage();
-});
-
+sendBtn.addEventListener("click", () => sendMessage());
 messageInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendMessage();
 });
@@ -32,21 +28,10 @@ messageInput.addEventListener("keypress", (e) => {
 function sendMessage() {
   const text = messageInput.value.trim();
   if (text !== "") {
-    socket.emit("send-message", { text, type: "text" });
+    socket.emit("send-message", { text });
     messageInput.value = "";
   }
 }
-
-imageInput.addEventListener("change", () => {
-  const file = imageInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      socket.emit("send-message", { text: e.target.result, type: "image" });
-    };
-    reader.readAsDataURL(file);
-  }
-});
 
 clearBtn.addEventListener("click", () => {
   socket.emit("clear-chat");
@@ -68,15 +53,7 @@ socket.on("chat-cleared", () => {
 function displayMessage(msg) {
   const div = document.createElement("div");
   div.classList.add("message", msg.name === username ? "sent" : "received");
-  if (msg.type === "text") {
-    div.textContent = `${msg.name}: ${msg.text}`;
-  } else if (msg.type === "image") {
-    const img = document.createElement("img");
-    img.src = msg.text;
-    img.style.maxWidth = "200px";
-    div.appendChild(document.createTextNode(`${msg.name}: `));
-    div.appendChild(img);
-  }
+  div.textContent = `${msg.name}: ${msg.text}`;
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
