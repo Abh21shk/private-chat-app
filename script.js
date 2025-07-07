@@ -1,80 +1,60 @@
 const socket = io();
-
-const loginContainer = document.getElementById("loginContainer");
-const chatContainer = document.getElementById("chatContainer");
-const usernameInput = document.getElementById("usernameInput");
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-
-const messages = document.getElementById("messages");
-const messageInput = document.getElementById("messageInput");
-const sendBtn = document.getElementById("sendBtn");
-const clearBtn = document.getElementById("clearBtn");
-const status = document.getElementById("status");
-const typingDiv = document.getElementById("typing");
+const loginScreen = document.getElementById('login-screen');
+const chatContainer = document.getElementById('chat-container');
+const chatMessages = document.getElementById('chat-messages');
+const usernameInput = document.getElementById('username');
+const loginBtn = document.getElementById('login-btn');
+const sendBtn = document.getElementById('send-btn');
+const messageInput = document.getElementById('message-input');
+const logoutBtn = document.getElementById('logout-btn');
+const chatTitle = document.getElementById('chat-title');
 
 let username = "";
 
-loginBtn.onclick = () => {
-  username = usernameInput.value.trim();
-  if (username) {
-    socket.emit("login", username);
-    loginContainer.style.display = "none";
-    chatContainer.style.display = "block";
-  }
-};
-
-logoutBtn.onclick = () => {
-  location.reload();
-};
-
-sendBtn.onclick = () => {
-  const msg = messageInput.value.trim();
-  if (msg) {
-    socket.emit("sendMessage", msg);
-    messageInput.value = "";
-    socket.emit("typing", false);
-  }
-};
-
-messageInput.oninput = () => {
-  socket.emit("typing", messageInput.value !== "");
-};
-
-clearBtn.onclick = () => {
-  socket.emit("clearChat");
-};
-
-socket.on("loadMessages", (msgs) => {
-  messages.innerHTML = "";
-  msgs.forEach((msg) => appendMessage(msg));
-});
-
-socket.on("newMessage", (msg) => {
-  appendMessage(msg);
-});
-
-socket.on("clearMessages", () => {
-  messages.innerHTML = "";
-});
-
-socket.on("updateUsers", (users) => {
-  const count = Object.keys(users).length;
-  status.textContent = `Active Users: ${count}`;
-});
-
-socket.on("showTyping", ({ username: user, isTyping }) => {
-  if (isTyping) {
-    typingDiv.textContent = `${user} is typing...`;
+loginBtn.addEventListener('click', () => {
+  const name = usernameInput.value.trim();
+  if (name === "Abhii" || name === "Babe❤️😘") {
+    username = name;
+    socket.emit('new-user', username);
+    loginScreen.style.display = "none";
+    chatContainer.style.display = "flex";
+    chatTitle.textContent = `❤️ Chatting as ${username}`;
+    // Set chat background
+    if (username === "Abhii") {
+      chatMessages.style.backgroundImage = "url('abhii-bg.jpg')";
+    } else {
+      chatMessages.style.backgroundImage = "url('babe-bg.jpg')";
+    }
   } else {
-    typingDiv.textContent = "";
+    alert("Invalid name! Use 'Abhii' or 'Babe❤️😘'");
   }
 });
 
-function appendMessage(msg) {
-  const div = document.createElement("div");
-  div.classList.add("message");
-  div.textContent = `${msg.username} (${msg.time}): ${msg.text}`;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+sendBtn.addEventListener('click', sendMessage);
+messageInput.addEventListener('keypress', e => {
+  if (e.key === "Enter") sendMessage();
+});
+logoutBtn.addEventListener('click', () => {
+  window.location.reload();
+});
+
+function sendMessage() {
+  const message = messageInput.value.trim();
+  if (message !== "") {
+    appendMessage(`You: ${message}`, "sent");
+    socket.emit('send-chat-message', message);
+    messageInput.value = "";
+  }
 }
+
+function appendMessage(msg, type) {
+  const div = document.createElement('div');
+  div.textContent = msg;
+  div.classList.add('message', type);
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+socket.on('chat-message', data => {
+  appendMessage(`${data.name}: ${data.message}`, "received");
+});
