@@ -3,29 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Text 💬</title>
+  <title>Text Now</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="login-container" id="loginContainer">
-    <h1>💬 Text</h1>
-    <input type="text" id="usernameInput" placeholder="Enter your name" />
-    <button id="loginBtn">Login</button>
+  <div class="login-screen" id="login-screen">
+    <h2>✨ Welcome to Text Now ✨</h2>
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button id="login-btn">Login</button>
   </div>
 
-  <div class="chat-container" id="chatContainer" style="display: none;">
-    <header>
-      <h2>💬 Text</h2>
-      <div class="status" id="status">Active Users: 0</div>
-      <button id="logoutBtn">Logout</button>
-    </header>
-    <div class="messages" id="messages"></div>
-    <div class="typing" id="typing"></div>
-    <div class="input-container">
-      <input type="text" id="messageInput" placeholder="Type a message..." />
-      <button id="sendBtn">Send</button>
-      <button id="clearBtn" class="clear">Clear Chat</button>
+  <div class="chat-container" id="chat-container" style="display: none;">
+    <div class="chat-header">
+      <h1 id="chat-title">💬 Text Now</h1>
+      <div class="status" id="status">Offline</div>
+      <button id="logout-btn">Logout</button>
     </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="typing-indicator" id="typing-indicator" style="display: none;">Someone is typing...</div>
+    <div class="chat-input">
+      <input type="text" id="message-input" placeholder="Type your message..." />
+      <button id="send-btn">Send</button>
+    </div>
+    <button id="clear-chat-btn" class="clear-btn">Clear Chat</button>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
